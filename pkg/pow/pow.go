@@ -8,7 +8,6 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"fmt"
-	"hash"
 )
 
 const (
@@ -23,14 +22,13 @@ var (
 
 type Challenge struct {
 	difficulty byte
-	hasher     hash.Hash
 }
 
 func NewChallenge(difficulty byte) (*Challenge, error) {
 	if difficulty < MinDifficulty || difficulty > MaxDifficulty {
 		return nil, ErrInvalidDifficulty
 	}
-	return &Challenge{difficulty, sha256.New()}, nil
+	return &Challenge{difficulty}, nil
 }
 
 func (c Challenge) GetDifficulty() byte {
@@ -66,9 +64,8 @@ func (c Challenge) Solve(puzzle []byte) []byte {
 
 // Verify checks if the given nonce produces a hash with a certain number of leading zeros.
 func (c Challenge) Verify(puzzle []byte, nonce []byte) bool {
-	c.hasher.Reset()
-	c.hasher.Write(append(puzzle, nonce...))
-	return checkLeadingZeros(c.hasher.Sum(nil), c.difficulty)
+	hash := sha256.Sum256(append(puzzle, nonce...))
+	return checkLeadingZeros(hash[:], c.difficulty)
 }
 
 func checkLeadingZeros(b []byte, n byte) bool {

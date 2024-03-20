@@ -10,12 +10,14 @@ Each message is encoded as a byte slice. The first byte indicates the message ty
 
 # Usage
 
+There is a client and a server implementation for the protocol. The client simulates the behavior of several clients that connect to the server and solve the proof-of-work challenge. The server listens for incoming connections, sends a challenge to the clients, and verifies the solutions.
+
 ## Tested on
 * macOS 14.3.1
 * docker 25.0.3
 * docker-compose 2.24.5
 
-## Run demo
+## Run demo client and server
 You can configure some parameters in `.env` file in the root of the project.
 ```
 make compose
@@ -28,5 +30,5 @@ make test
 
 ## Run linter
 ```
-make list
+make lint
 ```

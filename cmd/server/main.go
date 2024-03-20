@@ -19,7 +19,7 @@ import (
 	"github.com/smokfyz/wow/pkg/protocol"
 )
 
-func handleConnection(ctx context.Context, conn net.Conn, proto protocol.Server, wg *sync.WaitGroup, timeout time.Duration) {
+func handleConnection(ctx context.Context, conn net.Conn, server protocol.Server, wg *sync.WaitGroup, timeout time.Duration) {
 	defer conn.Close()
 	defer wg.Done()
 
@@ -36,16 +36,16 @@ func handleConnection(ctx context.Context, conn net.Conn, proto protocol.Server,
 			}
 			n, err := conn.Read(buf)
 			if err != nil {
-				log.Warn().Err(err).Msg("failed to read request")
+				log.Debug().Err(err).Msg("failed to read request")
 				return
 			}
-			resp := proto.HandleRequest(buf[:n])
+			resp := server.HandleRequest(buf[:n])
 			if err := conn.SetWriteDeadline(time.Now().Add(timeout)); err != nil {
 				log.Warn().Err(err).Msg("failed to set write deadline")
 				return
 			}
 			if _, err := conn.Write(resp); err != nil {
-				log.Warn().Err(err).Msg("failed to write response")
+				log.Debug().Err(err).Msg("failed to write response")
 				return
 			}
 		}
