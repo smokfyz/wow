@@ -1,21 +1,12 @@
 # Proof of work implementation
 
-This project implement a proof of work algorithm based on same idea as Bitcoin's proof of work and Hashcash.
-The algorithm generates a random puzzle and then tries to find a nonce that when combined with the puzzle
-produces a hash with a certain number of leading zeros. The number of leading zeros is determined by the difficulty
-level. The attacker can't predict the nonce that will produce the desired hash, so the only way to find it is by
-brute force. On the other hand, the verifier can easily check if the nonce is valid by hashing the puzzle and the nonce
-and checking if the hash has the required number of leading zeros. For hash function, it uses SHA256 because it is time proven and secure hash function which has high computational cost but at the same time easy to check. But another hash function with similar properties can be used as well.
+This project implements a proof-of-work algorithm based on the same idea as Bitcoin's proof of work and Hashcash. The algorithm generates a random puzzle and then attempts to find a nonce that, when combined with the puzzle, produces a hash with a certain number of leading zeros. The number of leading zeros is determined by the difficulty level. The attacker cannot predict the nonce that will produce the desired hash, so the only way to find it is through brute force. Conversely, the verifier can easily check if the nonce is valid by hashing the puzzle and the nonce, and verifying if the hash has the required number of leading zeros. For the hash function, it employs SHA256 because it is a time-proven and secure hash function with a high computational cost, yet it is easy to verify. However, another hash function with similar properties can also be utilized.
 
 # Protocol
 
-For demonstration purposes was implemented TCP based request-response protocol.
-The server and client communicate using encoded messages.
-There are 5 types of messages: challenge request, challenge response, verify request, verified response, and error response.
+For demonstration purposes, a TCP-based request-response protocol has been implemented. The server and client communicate using encoded messages. There are five types of messages: challenge request, challenge response, verify request, verified response, and error response.
 
-Each message encoded as a byte slice. The first byte is the message type. The rest of the bytes are the message body.
-All fields except nonce in the message bodies has fixed length so it's not necessary to include separator between fields.
-You can see implementation of decoding and encoding of message bodies in `pkg/protocol/bodies.go`.
+Each message is encoded as a byte slice. The first byte indicates the message type, while the remaining bytes constitute the message body. All fields in the message bodies, except for the nonce, have fixed lengths, so it is not necessary to include a separator between fields. You can find the implementation of decoding and encoding of message bodies in pkg/protocol/bodies.go.
 
 # Usage
 
